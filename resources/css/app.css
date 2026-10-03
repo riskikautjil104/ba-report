@@ -203,3 +203,59 @@
     box-shadow: 0 4px 12px -2px rgba(14, 165, 233, 0.06);
     padding: 1.25rem;
 }
+
+/* 3D Animated Background Keyframes */
+
+@keyframes floatSlow {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    33% {
+        transform: translate(35px, -45px) scale(1.08) rotate(4deg);
+    }
+    66% {
+        transform: translate(-30px, 25px) scale(0.95) rotate(-3deg);
+    }
+}
+
+@keyframes floatReverse {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    33% {
+        transform: translate(-40px, 40px) scale(1.1) rotate(-5deg);
+    }
+    66% {
+        transform: translate(30px, -35px) scale(0.92) rotate(3deg);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.45;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.15);
+    }
+}
+
+.animate-float-slow {
+    animation: floatSlow 14s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+    animation: floatReverse 18s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+    animation: pulseGlow 9s ease-in-out infinite;
+}
+
+.bg-grid-mesh {
+    background-size: 36px 36px;
+    background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+}
