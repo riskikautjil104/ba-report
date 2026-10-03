@@ -268,10 +268,18 @@
                             type="text" 
                             id="nama_vendor" 
                             name="nama_vendor" 
+                            list="registered-vendors-audit-list"
                             value="{{ old('nama_vendor') }}" 
-                            placeholder="Contoh: PT. Telkom / CV. Maluku Cyber Solusi" 
+                            placeholder="Contoh: PT. Multi Medika Solusindo / PT Telkom" 
                             class="input-3d text-xs w-full"
                         >
+                        <datalist id="registered-vendors-audit-list">
+                            @if(isset($registeredVendors))
+                                @foreach($registeredVendors as $rv)
+                                    <option value="{{ $rv->name }}">{{ $rv->email }}</option>
+                                @endforeach
+                            @endif
+                        </datalist>
                     </div>
 
                     <div>

@@ -8,6 +8,7 @@ use App\Enums\AuditStatus;
 use App\Enums\BaPriority;
 use App\Enums\BaStatus;
 use App\Enums\ParticipantType;
+use App\Enums\UserRole;
 use App\Http\Requests\BeritaAcara\StoreAttachmentRequest;
 use App\Http\Requests\BeritaAcara\StoreBeritaAcaraRequest;
 use App\Http\Requests\BeritaAcara\StoreHandlingLogRequest;
@@ -18,6 +19,7 @@ use App\Models\BeritaAcara;
 use App\Models\Category;
 use App\Models\HandlingLog;
 use App\Models\Participant;
+use App\Models\User;
 use App\Services\AuditService;
 use App\Services\BaNumberGenerator;
 use Illuminate\Http\RedirectResponse;
@@ -102,11 +104,14 @@ class BeritaAcaraController extends Controller
             $fromAudit = AuditKebutuhan::find($request->input('from_audit'));
         }
 
+        $registeredVendors = User::where('role', UserRole::Vendor)->where('is_active', true)->orderBy('name')->get();
+
         return view('berita-acara.create', [
             'categories' => $categories,
             'nextNomor' => $nextNomor,
             'priorities' => BaPriority::cases(),
             'fromAudit' => $fromAudit,
+            'registeredVendors' => $registeredVendors,
         ]);
     }
 
@@ -225,12 +230,15 @@ class BeritaAcaraController extends Controller
         $categories = Category::active()->orderBy('name')->get();
         $reporter = $beritaAcara->reporter;
 
+        $registeredVendors = User::where('role', UserRole::Vendor)->where('is_active', true)->orderBy('name')->get();
+
         return view('berita-acara.edit', [
             'beritaAcara' => $beritaAcara,
             'reporter' => $reporter,
             'categories' => $categories,
             'priorities' => BaPriority::cases(),
             'statuses' => BaStatus::cases(),
+            'registeredVendors' => $registeredVendors,
         ]);
     }
 

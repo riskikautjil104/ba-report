@@ -199,7 +199,22 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="nama_vendor" class="block text-xs font-semibold text-slate-700 mb-1">Nama Perusahaan / Rekanan Vendor</label>
-                    <input type="text" id="nama_vendor" name="nama_vendor" value="{{ old('nama_vendor', $beritaAcara->nama_vendor) }}" placeholder="Contoh: PT. Telkom Indonesia / CV. Maluku Cyber Solusi" class="input-3d text-xs">
+                    <input 
+                        type="text" 
+                        id="nama_vendor" 
+                        name="nama_vendor" 
+                        list="registered-vendors-list"
+                        value="{{ old('nama_vendor', $beritaAcara->nama_vendor) }}" 
+                        placeholder="Contoh: PT. Multi Medika Solusindo / PT Telkom" 
+                        class="input-3d text-xs w-full"
+                    >
+                    <datalist id="registered-vendors-list">
+                        @if(isset($registeredVendors))
+                            @foreach($registeredVendors as $rv)
+                                <option value="{{ $rv->name }}">{{ $rv->email }}</option>
+                            @endforeach
+                        @endif
+                    </datalist>
                 </div>
 
                 <div>

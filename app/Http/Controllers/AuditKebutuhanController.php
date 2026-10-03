@@ -6,11 +6,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\AuditStatus;
 use App\Enums\BaPriority;
+use App\Enums\UserRole;
 use App\Http\Requests\AuditKebutuhan\StoreAuditKebutuhanRequest;
 use App\Http\Requests\AuditKebutuhan\UpdateAuditKebutuhanRequest;
 use App\Models\AuditKebutuhan;
 use App\Models\AuditLog;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -73,6 +75,7 @@ class AuditKebutuhanController extends Controller
             'categories' => Category::active()->orderBy('name')->get(),
             'priorities' => BaPriority::cases(),
             'statuses' => AuditStatus::cases(),
+            'registeredVendors' => User::where('role', UserRole::Vendor)->where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -153,6 +156,7 @@ class AuditKebutuhanController extends Controller
             'categories' => Category::active()->orderBy('name')->get(),
             'priorities' => BaPriority::cases(),
             'statuses' => AuditStatus::cases(),
+            'registeredVendors' => User::where('role', UserRole::Vendor)->where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
