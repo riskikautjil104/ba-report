@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Audit Kebutuhan User'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 300)">
+<div class="space-y-6 w-full" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 300)">
     <!-- Header Banner -->
     <div class="card-3d p-6 bg-gradient-to-r from-sky-50 via-white to-sky-100/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

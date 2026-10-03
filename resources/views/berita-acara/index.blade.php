@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Daftar Berita Acara & Rekanan Vendor'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 400)">
+<div class="space-y-6 w-full" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 400)">
     <!-- Top Action & Filter Bar -->
     <div class="card-3d p-5 bg-white">
         <form method="GET" action="{{ route('berita-acara.index') }}" class="space-y-4">

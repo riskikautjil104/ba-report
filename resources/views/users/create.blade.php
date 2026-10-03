@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Tambah Pengguna Baru'])
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="w-full space-y-6">
     <!-- Back Button -->
     <div>
         <a href="{{ route('users.index') }}" class="btn-3d-light px-3.5 py-2 text-xs">

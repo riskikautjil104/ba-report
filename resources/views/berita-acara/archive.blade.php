@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Arsip Berita Acara'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto">
+<div class="space-y-6 w-full">
     <div class="card-3d p-6 bg-gradient-to-r from-purple-50 via-white to-sky-50 border border-purple-200">
         <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shadow-md">

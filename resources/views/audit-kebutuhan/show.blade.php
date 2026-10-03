@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Detail Audit Kebutuhan User'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 250)">
+<div class="space-y-6 w-full" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 250)">
     <!-- Shimmer Skeleton Loading State -->
     <div x-show="loading" class="space-y-6">
         <div class="flex items-center justify-between">

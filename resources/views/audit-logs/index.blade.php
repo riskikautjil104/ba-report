@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Audit Log Sistem'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto">
+<div class="space-y-6 w-full">
     <!-- Top Filter Bar -->
     <div class="card-3d p-5 bg-white">
         <form method="GET" action="{{ route('audit-logs.index') }}" class="flex flex-col sm:flex-row gap-3 items-center">

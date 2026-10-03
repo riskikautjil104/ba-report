@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Manajemen Kategori Masalah'])
 
 @section('content')
-<div class="space-y-6 max-w-5xl mx-auto">
+<div class="space-y-6 w-full">
     <!-- Top Action Card: Add Category -->
     <div class="card-3d p-6 bg-white space-y-4">
         <h2 class="text-sm font-bold text-slate-800">Tambah Kategori Baru</h2>

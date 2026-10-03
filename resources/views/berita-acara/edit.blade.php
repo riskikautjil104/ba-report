@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Edit Berita Acara'])
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
     <div class="flex items-center justify-between">
         <a href="{{ route('berita-acara.show', $beritaAcara) }}" class="btn-3d-light px-3.5 py-2 text-xs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

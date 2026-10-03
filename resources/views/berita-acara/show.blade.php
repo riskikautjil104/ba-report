@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Detail Berita Acara'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto" x-data="{ loading: true, signModalOpen: false, signingUrl: '{{ session('signing_url') }}' }" x-init="setTimeout(() => loading = false, 300)">
+<div class="space-y-6 w-full" x-data="{ loading: true, signModalOpen: false, signingUrl: '{{ session('signing_url') }}' }" x-init="setTimeout(() => loading = false, 300)">
     <!-- Shimmer Skeleton Loading State -->
     <div x-show="loading" class="space-y-6">
         <div class="flex items-center justify-between">

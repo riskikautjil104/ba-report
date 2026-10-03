@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Edit Hasil Wawancara Audit Kebutuhan'])
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
     <!-- Breadcrumb & Back -->
     <div class="flex items-center justify-between">
         <a href="{{ route('audit-kebutuhan.show', $audit) }}" class="btn-3d-light px-3.5 py-2 text-xs">

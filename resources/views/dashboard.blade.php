@@ -1,7 +1,7 @@
 @extends('layouts.app', ['heading' => 'Dashboard Utama'])
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 400)">
+<div class="space-y-6 w-full" x-data="{ loading: true }" x-init="setTimeout(() => loading = false, 400)">
     <!-- Welcome 3D Hero Banner -->
     <div class="card-3d p-6 sm:p-8 bg-gradient-to-r from-sky-50 via-white to-sky-100/60 border border-sky-200/80">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
