@@ -69,6 +69,13 @@ class AuditKebutuhan extends Model
             return $query;
         }
 
+        if ($user->isVendor()) {
+            return $query->where(function (Builder $q) use ($user): void {
+                $q->where('auditor_id', $user->id)
+                    ->orWhereNotNull('nama_vendor');
+            });
+        }
+
         return $query->where('auditor_id', $user->id);
     }
 

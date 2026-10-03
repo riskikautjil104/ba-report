@@ -31,6 +31,11 @@ class BeritaAcaraPolicy
             return true;
         }
 
+        if ($user->isVendor()) {
+            return $beritaAcara->created_by === $user->id
+                || (! empty($beritaAcara->nama_vendor));
+        }
+
         return $beritaAcara->created_by === $user->id;
     }
 

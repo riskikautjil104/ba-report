@@ -102,15 +102,17 @@
                     Manajemen & Audit
                 </div>
 
-                <a href="{{ route('audit-kebutuhan.index') }}" 
-                   class="{{ request()->routeIs('audit-kebutuhan.*') 
-                       ? 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-sky-50 text-sky-800 border border-sky-200/80 shadow-sm' 
-                       : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-sky-50/60 hover:text-sky-700 transition' }}">
-                    <svg class="w-5 h-5 {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                    </svg>
-                    <span class="text-xs">Audit Kebutuhan User</span>
-                </a>
+                @unless (auth()->user()->isVendor())
+                    <a href="{{ route('audit-kebutuhan.index') }}" 
+                       class="{{ request()->routeIs('audit-kebutuhan.*') 
+                           ? 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-sky-50 text-sky-800 border border-sky-200/80 shadow-sm' 
+                           : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-sky-50/60 hover:text-sky-700 transition' }}">
+                        <svg class="w-5 h-5 {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                        <span class="text-xs">Audit Kebutuhan User</span>
+                    </a>
+                @endunless
 
                 <a href="{{ route('berita-acara.index') }}" 
                    class="{{ request()->routeIs('berita-acara.index', 'berita-acara.show', 'berita-acara.edit') 
@@ -258,14 +260,24 @@
                         <span class="text-[9px] font-bold text-sky-700 mt-0.5">Buat BA</span>
                     </div>
 
-                    <!-- 4. Audit User (Wawancara Ruangan) -->
-                    <a href="{{ route('audit-kebutuhan.index') }}" 
-                       class="flex flex-col items-center justify-center py-1 px-2 rounded-xl transition {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
-                        <svg class="w-5 h-5 {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600 stroke-[2.5]' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                        </svg>
-                        <span class="text-[10px] mt-0.5">Audit User</span>
-                    </a>
+                    <!-- 4. Audit User / Arsip untuk Vendor -->
+                    @if (auth()->user()->isVendor())
+                        <a href="{{ route('berita-acara.archive') }}" 
+                           class="flex flex-col items-center justify-center py-1 px-2 rounded-xl transition {{ request()->routeIs('berita-acara.archive') ? 'text-sky-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+                            <svg class="w-5 h-5 {{ request()->routeIs('berita-acara.archive') ? 'text-sky-600 stroke-[2.5]' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                            </svg>
+                            <span class="text-[10px] mt-0.5">Arsip BA</span>
+                        </a>
+                    @else
+                        <a href="{{ route('audit-kebutuhan.index') }}" 
+                           class="flex flex-col items-center justify-center py-1 px-2 rounded-xl transition {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+                            <svg class="w-5 h-5 {{ request()->routeIs('audit-kebutuhan.*') ? 'text-sky-600 stroke-[2.5]' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <span class="text-[10px] mt-0.5">Audit User</span>
+                        </a>
+                    @endif
 
                     <!-- 5. Menu Lainnya (Buka Drawer) -->
                     <button type="button" 

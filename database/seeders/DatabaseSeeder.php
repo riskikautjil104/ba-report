@@ -52,6 +52,17 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'vendor@rsudchasan.id'],
+            [
+                'name' => 'PT Multi Medika Solusindo (Vendor)',
+                'username' => 'vendor',
+                'password' => Hash::make('password'),
+                'role' => UserRole::Vendor,
+                'is_active' => true,
+            ]
+        );
+
         $this->call(CategorySeeder::class);
     }
 }

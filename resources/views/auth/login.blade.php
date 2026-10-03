@@ -115,15 +115,23 @@
 
         <!-- Credentials Quick Hint Card -->
         <div class="mt-6 pt-5 border-t border-sky-100">
-            <p class="text-xs font-bold text-sky-900 uppercase tracking-wider mb-2">Akun Default Sistem (Sprint 0):</p>
-            <div class="grid grid-cols-2 gap-2 text-xs">
+            <p class="text-xs font-bold text-sky-900 uppercase tracking-wider mb-2">Akun Demo Sistem (Password: password):</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                 <div class="p-2 rounded-xl bg-sky-50/80 border border-sky-200/60 text-slate-700">
-                    <div class="font-bold text-sky-800">Superadmin:</div>
-                    <code class="text-slate-600 font-mono">admin</code> / <code class="text-slate-600 font-mono">password</code>
+                    <div class="font-bold text-sky-800 text-[11px]">Superadmin:</div>
+                    <code class="text-slate-600 font-mono text-[11px]">admin</code>
                 </div>
                 <div class="p-2 rounded-xl bg-sky-50/80 border border-sky-200/60 text-slate-700">
-                    <div class="font-bold text-sky-800">Staf IT:</div>
-                    <code class="text-slate-600 font-mono">staf</code> / <code class="text-slate-600 font-mono">password</code>
+                    <div class="font-bold text-sky-800 text-[11px]">Direktur:</div>
+                    <code class="text-slate-600 font-mono text-[11px]">direktur</code>
+                </div>
+                <div class="p-2 rounded-xl bg-sky-50/80 border border-sky-200/60 text-slate-700">
+                    <div class="font-bold text-sky-800 text-[11px]">Staf IT:</div>
+                    <code class="text-slate-600 font-mono text-[11px]">staf</code>
+                </div>
+                <div class="p-2 rounded-xl bg-sky-50/80 border border-sky-200/60 text-slate-700">
+                    <div class="font-bold text-sky-800 text-[11px]">Vendor:</div>
+                    <code class="text-slate-600 font-mono text-[11px]">vendor</code>
                 </div>
             </div>
         </div>

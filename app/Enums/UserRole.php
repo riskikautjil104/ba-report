@@ -9,6 +9,7 @@ enum UserRole: string
     case Superadmin = 'superadmin';
     case Staf = 'staf';
     case Direktur = 'direktur';
+    case Vendor = 'vendor';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum UserRole: string
             self::Superadmin => 'Superadmin',
             self::Staf => 'Staf IT',
             self::Direktur => 'Direktur / Manajemen',
+            self::Vendor => 'Rekanan Vendor / Pihak Ketiga',
         };
     }
 
@@ -32,5 +34,10 @@ enum UserRole: string
     public function isDirektur(): bool
     {
         return $this === self::Direktur;
+    }
+
+    public function isVendor(): bool
+    {
+        return $this === self::Vendor;
     }
 }

@@ -125,6 +125,16 @@ class BeritaAcara extends Model
             return $query;
         }
 
+        if ($user->isVendor()) {
+            return $query->where(function (Builder $q) use ($user): void {
+                $q->where('created_by', $user->id)
+                    ->orWhere(function (Builder $sub): void {
+                        $sub->whereNotNull('nama_vendor')
+                            ->where('nama_vendor', '!=', '');
+                    });
+            });
+        }
+
         return $query->where('created_by', $user->id);
     }
 }

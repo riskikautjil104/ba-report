@@ -10,6 +10,8 @@
                     <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
                     @if ($user->isDirektur())
                         Dashboard Eksekutif Direktur RSUD Dr. H. Chasan Boesoirie
+                    @elseif ($user->isVendor())
+                        Portal Rekanan Vendor IT RSUD Dr. H. Chasan Boesoirie
                     @else
                         Sistem Audit Kebutuhan & Vendor Ruang IT RSUD Dr. H. Chasan Boesoirie
                     @endif
@@ -20,6 +22,8 @@
                 <p class="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
                     @if ($user->isDirektur())
                         Pantau seluruh perkembangan <strong>audit kebutuhan IT dari unit ruangan</strong>, alokasi pekerjaan ke <strong>rekanan vendor</strong>, serta status penyelesaian operasional rumah sakit secara transparan dan <em>real-time</em>.
+                    @elseif ($user->isVendor())
+                        Selamat datang di portal rekanan resmi pihak ketiga. Pantau instruksi pekerjaan teknis, tindak lanjut penanganan perangkat, dan kelola dokumen berita acara serah terima secara digital.
                     @else
                         Aplikasi ini digunakan untuk <strong>mengaudit dan mendokumentasikan kebutuhan perbaikan/pengadaan IT dari seluruh ruangan</strong>, merumuskan spesifikasi teknis, lalu menyerahkan pekerjaan ke <strong>vendor rekanan</strong> hingga selesai dan diverifikasi secara digital.
                     @endif
@@ -32,6 +36,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                         <span>Pantau Progres Seluruh BA</span>
+                    </a>
+                @elseif ($user->isVendor())
+                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>+ Laporan Berita Acara Vendor</span>
                     </a>
                 @else
                     <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
