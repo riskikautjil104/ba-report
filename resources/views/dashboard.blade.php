@@ -29,7 +29,13 @@
                     @endif
                 </p>
             </div>
-            <div class="shrink-0 flex items-center gap-3">
+            <div class="shrink-0 flex items-center flex-wrap gap-2.5">
+                <a href="{{ route('kanban.index') }}" class="btn-3d-secondary px-4 py-3 text-xs shadow-md flex items-center gap-2">
+                    <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                    </svg>
+                    <span>Papan Kanban Vendor</span>
+                </a>
                 @if ($user->isDirektur())
                     <a href="{{ route('berita-acara.index') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

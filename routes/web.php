@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BeritaAcaraController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\SigningController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
@@ -37,6 +38,10 @@ Route::middleware('throttle:30,1')->group(function (): void {
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Kanban Board Vendor & Pekerjaan IT
+    Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban.index');
+    Route::patch('/kanban/{beritaAcara}/update-status', [KanbanController::class, 'updateStatus'])->name('kanban.update-status');
 
     // Audit Kebutuhan User / Wawancara Unit
     Route::get('/audit-kebutuhan/{auditKebutuhan}/print', [AuditKebutuhanController::class, 'print'])->name('audit-kebutuhan.print');

@@ -98,6 +98,16 @@
                     <span class="text-xs">Dashboard</span>
                 </a>
 
+                <a href="{{ route('kanban.index') }}" 
+                   class="{{ request()->routeIs('kanban.*') 
+                       ? 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-sky-50 text-sky-800 border border-sky-200/80 shadow-sm' 
+                       : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-sky-50/60 hover:text-sky-700 transition' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('kanban.*') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                    </svg>
+                    <span class="text-xs">Kanban Vendor & IT</span>
+                </a>
+
                 <div class="pt-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3">
                     Manajemen & Audit
                 </div>
