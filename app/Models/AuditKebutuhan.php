@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\AuditStatus;
 use App\Enums\BaPriority;
+use App\Enums\UserRole;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,9 +71,8 @@ class AuditKebutuhan extends Model
         }
 
         if ($user->isVendor()) {
-            return $query->where(function (Builder $q) use ($user): void {
-                $q->where('auditor_id', $user->id)
-                    ->orWhereNotNull('nama_vendor');
+            return $query->whereHas('auditor', function (Builder $q): void {
+                $q->whereIn('role', [UserRole::Superadmin, UserRole::Staf]);
             });
         }
 

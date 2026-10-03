@@ -62,8 +62,12 @@ class AuditKebutuhanController extends Controller
     /**
      * Show the form for creating a new audit kebutuhan.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->user()->isVendor()) {
+            abort(403, 'Rekanan vendor hanya memiliki hak akses pemantauan (lihat audit kebutuhan).');
+        }
+
         return view('audit-kebutuhan.create', [
             'nextNomor' => AuditKebutuhan::generateNomor(),
             'categories' => Category::active()->orderBy('name')->get(),
@@ -122,9 +126,13 @@ class AuditKebutuhanController extends Controller
     /**
      * Display the specified audit kebutuhan.
      */
-    public function show(AuditKebutuhan $auditKebutuhan): View
+    public function show(Request $request, AuditKebutuhan $auditKebutuhan): View
     {
         $auditKebutuhan->load(['category', 'auditor', 'beritaAcara']);
+
+        if ($request->user()->isVendor() && ! in_array($auditKebutuhan->auditor?->role?->value, ['superadmin', 'staf'], true)) {
+            abort(403, 'Akses tidak diizinkan. Rekanan vendor hanya dapat memantau audit yang dicatat oleh staf dan superadmin.');
+        }
 
         return view('audit-kebutuhan.show', [
             'audit' => $auditKebutuhan,
@@ -134,8 +142,12 @@ class AuditKebutuhanController extends Controller
     /**
      * Show the form for editing the specified audit kebutuhan.
      */
-    public function edit(AuditKebutuhan $auditKebutuhan): View
+    public function edit(Request $request, AuditKebutuhan $auditKebutuhan): View
     {
+        if ($request->user()->isVendor()) {
+            abort(403, 'Rekanan vendor hanya memiliki hak akses pemantauan (lihat audit kebutuhan).');
+        }
+
         return view('audit-kebutuhan.edit', [
             'audit' => $auditKebutuhan,
             'categories' => Category::active()->orderBy('name')->get(),
@@ -177,6 +189,10 @@ class AuditKebutuhanController extends Controller
      */
     public function destroy(Request $request, AuditKebutuhan $auditKebutuhan): RedirectResponse
     {
+        if ($request->user()->isVendor()) {
+            abort(403, 'Rekanan vendor tidak diizinkan menghapus data audit kebutuhan.');
+        }
+
         $nomor = $auditKebutuhan->nomor;
         $auditKebutuhan->delete();
 
