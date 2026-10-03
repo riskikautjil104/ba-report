@@ -8,12 +8,14 @@ enum UserRole: string
 {
     case Superadmin = 'superadmin';
     case Staf = 'staf';
+    case Direktur = 'direktur';
 
     public function label(): string
     {
         return match ($this) {
             self::Superadmin => 'Superadmin',
             self::Staf => 'Staf IT',
+            self::Direktur => 'Direktur / Manajemen',
         };
     }
 
@@ -25,5 +27,10 @@ enum UserRole: string
     public function isStaf(): bool
     {
         return $this === self::Staf;
+    }
+
+    public function isDirektur(): bool
+    {
+        return $this === self::Direktur;
     }
 }

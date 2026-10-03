@@ -8,22 +8,39 @@
             <div class="space-y-2">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 text-sky-800 text-xs font-bold border border-sky-200">
                     <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-                    Sistem Audit Kebutuhan & Vendor Ruang IT RSUD Dr. H. Chasan Boesoirie
+                    @if ($user->isDirektur())
+                        Dashboard Eksekutif Direktur RSUD Dr. H. Chasan Boesoirie
+                    @else
+                        Sistem Audit Kebutuhan & Vendor Ruang IT RSUD Dr. H. Chasan Boesoirie
+                    @endif
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
                     Selamat Datang, <span class="text-sky-600">{{ $user->name }}</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-                    Aplikasi ini digunakan untuk <strong>mengaudit dan mendokumentasikan kebutuhan perbaikan/pengadaan IT dari seluruh ruangan</strong>, merumuskan spesifikasi teknis, lalu menyerahkan pekerjaan ke <strong>vendor rekanan</strong> hingga selesai dan diverifikasi secara digital.
+                    @if ($user->isDirektur())
+                        Pantau seluruh perkembangan <strong>audit kebutuhan IT dari unit ruangan</strong>, alokasi pekerjaan ke <strong>rekanan vendor</strong>, serta status penyelesaian operasional rumah sakit secara transparan dan <em>real-time</em>.
+                    @else
+                        Aplikasi ini digunakan untuk <strong>mengaudit dan mendokumentasikan kebutuhan perbaikan/pengadaan IT dari seluruh ruangan</strong>, merumuskan spesifikasi teknis, lalu menyerahkan pekerjaan ke <strong>vendor rekanan</strong> hingga selesai dan diverifikasi secara digital.
+                    @endif
                 </p>
             </div>
             <div class="shrink-0 flex items-center gap-3">
-                <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
-                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span>+ Audit Kebutuhan Baru</span>
-                </a>
+                @if ($user->isDirektur())
+                    <a href="{{ route('berita-acara.index') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>Pantau Progres Seluruh BA</span>
+                    </a>
+                @else
+                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>+ Audit Kebutuhan Baru</span>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -112,6 +129,47 @@
                 </div>
             </a>
         </div>
+
+        @if ($user->isDirektur() || $user->isSuperadmin())
+            <!-- Eksekutif Baris Khusus Direktur -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                <div class="p-4 rounded-2xl bg-white border border-sky-100 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-sky-50 text-sky-600 border border-sky-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Wawancara Audit Ruangan</span>
+                        <div class="text-lg font-black text-slate-800">{{ $totalAudit }} <span class="text-xs font-normal text-slate-500">Unit Terdata</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white border border-purple-100 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 border border-purple-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Penugasan Rekanan Vendor</span>
+                        <div class="text-lg font-black text-purple-700">{{ $vendorBaCount }} <span class="text-xs font-normal text-slate-500">Pekerjaan Pihak Ke-3</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white border border-rose-100 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Status Prioritas Mendesak</span>
+                        <div class="text-lg font-black text-rose-600">{{ $mendesakCount }} <span class="text-xs font-normal text-slate-500">Urgensi Tinggi</span></div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <!-- 2 Column Section: Recent List & Workflow Guide -->

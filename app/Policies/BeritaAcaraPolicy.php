@@ -27,7 +27,7 @@ class BeritaAcaraPolicy
             return false;
         }
 
-        if ($user->isSuperadmin()) {
+        if ($user->isSuperadmin() || $user->isDirektur()) {
             return true;
         }
 

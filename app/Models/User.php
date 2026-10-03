@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->role === UserRole::Staf;
     }
 
+    public function isDirektur(): bool
+    {
+        return $this->role === UserRole::Direktur;
+    }
+
     public function isActive(): bool
     {
         return (bool) $this->is_active;

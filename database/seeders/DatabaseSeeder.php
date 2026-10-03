@@ -41,6 +41,17 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'direktur@rsudchasan.id'],
+            [
+                'name' => 'Direktur RSUD Chasan Boesoirie',
+                'username' => 'direktur',
+                'password' => Hash::make('password'),
+                'role' => UserRole::Direktur,
+                'is_active' => true,
+            ]
+        );
+
         $this->call(CategorySeeder::class);
     }
 }

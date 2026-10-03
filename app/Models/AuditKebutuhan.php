@@ -65,7 +65,7 @@ class AuditKebutuhan extends Model
 
     public function scopeForUser(Builder $query, User $user): Builder
     {
-        if ($user->isSuperadmin()) {
+        if ($user->isSuperadmin() || $user->isDirektur()) {
             return $query;
         }
 

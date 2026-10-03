@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\BaPriority;
 use App\Enums\BaStatus;
+use App\Models\AuditKebutuhan;
 use App\Models\BeritaAcara;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -32,6 +34,11 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $auditQuery = AuditKebutuhan::forUser($user);
+        $totalAudit = (clone $auditQuery)->count();
+        $vendorBaCount = (clone $baseQuery)->whereNotNull('nama_vendor')->where('nama_vendor', '!=', '')->count();
+        $mendesakCount = (clone $baseQuery)->where('prioritas', BaPriority::Mendesak)->count();
+
         return view('dashboard', [
             'user' => $user,
             'totalBa' => $totalBa,
@@ -39,6 +46,9 @@ class DashboardController extends Controller
             'waitingSign' => $waitingSign,
             'completed' => $completed,
             'recentBas' => $recentBas,
+            'totalAudit' => $totalAudit,
+            'vendorBaCount' => $vendorBaCount,
+            'mendesakCount' => $mendesakCount,
         ]);
     }
 }
