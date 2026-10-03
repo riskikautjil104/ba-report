@@ -16,7 +16,6 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
@@ -24,6 +23,8 @@
 /storage/pail
 /vendor
 /documentasi
+/CLAUDE
+/.claude
 _ide_helper.php
 Homestead.json
 Homestead.yaml

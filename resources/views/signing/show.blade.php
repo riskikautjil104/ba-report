@@ -4,10 +4,8 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-2xl px-4 py-6" x-data="signaturePad()">
     <!-- Header -->
     <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-16 h-16 icon-3d-sphere mx-auto mb-3 shadow-lg">
-            <svg class="w-8 h-8 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-            </svg>
+        <div class="inline-flex items-center justify-center w-20 h-20 p-2 rounded-2xl bg-white shadow-xl border border-sky-100 mx-auto mb-3">
+            <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD Dr. H. Chasan Boesoirie" class="w-full h-full object-contain">
         </div>
         <h1 class="text-2xl font-black text-slate-800 tracking-tight">Tanda Tangan Berita Acara Digital</h1>
         <p class="text-xs text-slate-500 font-medium">Ruang IT RSUD Dr. H. Chasan Boesoirie Ternate</p>

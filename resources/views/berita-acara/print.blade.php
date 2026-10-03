@@ -53,17 +53,17 @@
         <!-- Letterhead (KOP SURAT) -->
         <div class="border-b-4 border-double border-slate-900 pb-4 mb-6 text-center">
             <div class="flex items-center justify-between">
-                <div class="w-16 h-16 shrink-0 flex items-center justify-center font-bold text-sky-800 text-xs border border-sky-300 rounded p-1">
-                    RSUD CB
+                <div class="w-20 h-20 shrink-0 flex items-center justify-center">
+                    <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD" class="w-full h-full object-contain">
                 </div>
                 <div class="flex-1 text-center px-4">
-                    <h2 class="text-sm font-bold tracking-wider text-slate-700 uppercase">Pemerintah Provinsi Maluku Utara</h2>
+                    <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-700 uppercase">Pemerintah Provinsi Maluku Utara</h2>
                     <h1 class="text-base sm:text-lg font-black text-slate-900 uppercase">Rumah Sakit Umum Daerah Dr. H. Chasan Boesoirie</h1>
                     <h3 class="text-xs sm:text-sm font-bold text-sky-800 tracking-wide uppercase">Instalasi Teknologi Informasi & Komunikasi (Ruang IT)</h3>
                     <p class="text-[11px] text-slate-600 mt-1">Jl. Tanah Tinggi No. 1, Kota Ternate, Maluku Utara 97715 &bull; Surel: it@rsudchasan.id</p>
                 </div>
-                <div class="w-16 h-16 shrink-0 flex items-center justify-center font-bold text-sky-800 text-xs border border-sky-300 rounded p-1">
-                    TIK
+                <div class="w-20 h-20 shrink-0 flex items-center justify-center">
+                    <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD" class="w-full h-full object-contain">
                 </div>
             </div>
         </div>

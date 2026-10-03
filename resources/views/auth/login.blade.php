@@ -4,11 +4,8 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-md px-4">
     <!-- Brand / 3D Header -->
     <div class="text-center">
-        <div class="inline-flex items-center justify-center w-20 h-20 icon-3d-sphere mx-auto mb-4 shadow-xl">
-            <!-- Medical Cross + Document 3D Icon -->
-            <svg class="w-10 h-10 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-7 5h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
+        <div class="inline-flex items-center justify-center w-24 h-24 p-2.5 rounded-3xl bg-white shadow-xl border border-sky-100 mx-auto mb-4">
+            <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD Dr. H. Chasan Boesoirie" class="w-full h-full object-contain">
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
             e-BA <span class="text-sky-600">IT Chasan</span>

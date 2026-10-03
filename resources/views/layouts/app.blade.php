@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? 'e-BA IT Chasan' }} — RSUD Dr. H. Chasan Boesoirie</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo/logoresmi.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,11 +19,7 @@
         <!-- Mobile Header Bar -->
         <header class="md:hidden flex items-center justify-between px-4 py-3 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-sm shrink-0 z-30">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 icon-3d-sphere shrink-0">
-                    <svg class="w-5 h-5 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-7 5h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                </div>
+                <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD Dr. H. Chasan Boesoirie" class="w-10 h-10 object-contain drop-shadow-sm shrink-0">
                 <div>
                     <span class="font-extrabold text-slate-800 text-base tracking-tight">e-BA <span class="text-sky-600">Chasan</span></span>
                     <span class="block text-[10px] text-slate-500 font-medium">Ruang IT RSUD</span>
@@ -51,11 +48,7 @@
             <!-- Sidebar Header -->
             <div class="p-5 border-b border-sky-100 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 icon-3d-sphere shrink-0">
-                        <svg class="w-6 h-6 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-7 5h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                    </div>
+                    <img src="{{ asset('logo/logoresmi.png') }}" alt="Logo RSUD Dr. H. Chasan Boesoirie" class="w-11 h-11 object-contain drop-shadow-sm shrink-0">
                     <div>
                         <div class="font-black text-slate-800 text-lg tracking-tight">e-BA <span class="text-sky-600">Chasan</span></div>
                         <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">RSUD Dr. H. Chasan B.</div>

@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? 'e-BA IT Chasan' }} — RSUD Dr. H. Chasan Boesoirie</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo/logoresmi.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
