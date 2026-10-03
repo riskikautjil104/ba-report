@@ -17,7 +17,7 @@ class StoreBeritaAcaraRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null && $this->user()->isActive();
+        return $this->user() !== null && $this->user()->isActive() && ! $this->user()->isVendor() && ! $this->user()->isDirektur();
     }
 
     /**

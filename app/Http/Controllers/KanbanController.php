@@ -62,7 +62,7 @@ class KanbanController extends Controller
 
         $allCards = $query->orderBy('tanggal', 'desc')->get();
 
-        // Columns definition for the workflow
+        // Columns definition for the 6-stage workflow
         $columns = [
             BaStatus::Draft->value => [
                 'status' => BaStatus::Draft,
@@ -70,34 +70,47 @@ class KanbanController extends Controller
                 'description' => 'Disposisi pekerjaan atau audit yang diserahkan ke vendor',
                 'color' => 'slate',
                 'cards' => $allCards->where('status', BaStatus::Draft)->values(),
+                'restricted_for_vendor' => false,
+            ],
+            BaStatus::Review->value => [
+                'status' => BaStatus::Review,
+                'title' => '2. Review',
+                'description' => 'Penelaahan teknis, survei lokasi, dan estimasi waktu vendor',
+                'color' => 'purple',
+                'cards' => $allCards->where('status', BaStatus::Review)->values(),
+                'restricted_for_vendor' => false,
             ],
             BaStatus::DalamPenanganan->value => [
                 'status' => BaStatus::DalamPenanganan,
-                'title' => '2. Sedang Dikerjakan',
-                'description' => 'Vendor / teknisi sedang melakukan pengerjaan di lokasi',
+                'title' => '3. Develop / Dikerjakan',
+                'description' => 'Vendor / teknisi sedang melakukan pengerjaan aktif di lokasi',
                 'color' => 'sky',
                 'cards' => $allCards->where('status', BaStatus::DalamPenanganan)->values(),
+                'restricted_for_vendor' => false,
             ],
             BaStatus::Tertunda->value => [
                 'status' => BaStatus::Tertunda,
-                'title' => '3. Tertunda / Pending',
-                'description' => 'Menunggu suku cadang, perangkat pengganti, atau vendor',
+                'title' => '4. Tunda / Pending',
+                'description' => 'Menunggu suku cadang, koordinasi teknis, atau approval',
                 'color' => 'amber',
                 'cards' => $allCards->where('status', BaStatus::Tertunda)->values(),
+                'restricted_for_vendor' => false,
             ],
-            BaStatus::MenungguTandaTangan->value => [
-                'status' => BaStatus::MenungguTandaTangan,
-                'title' => '4. Verifikasi & TTD',
-                'description' => 'Pekerjaan selesai, menunggu uji fungsi dan tanda tangan ruangan',
+            BaStatus::PenyerahanTesting->value => [
+                'status' => BaStatus::PenyerahanTesting,
+                'title' => '5. Penyerahan / Testing',
+                'description' => 'Uji fungsi & verifikasi serah terima (Khusus Staf & Superadmin)',
                 'color' => 'indigo',
-                'cards' => $allCards->where('status', BaStatus::MenungguTandaTangan)->values(),
+                'cards' => $allCards->filter(fn ($c) => in_array($c->status, [BaStatus::PenyerahanTesting, BaStatus::MenungguTandaTangan], true))->values(),
+                'restricted_for_vendor' => true,
             ],
             BaStatus::Selesai->value => [
                 'status' => BaStatus::Selesai,
-                'title' => '5. Selesai & Tuntas',
-                'description' => 'Serah terima pekerjaan sah dan tuntas',
+                'title' => '6. Selesai',
+                'description' => 'Pekerjaan dinyatakan selesai tuntas (Khusus Staf & Superadmin)',
                 'color' => 'emerald',
                 'cards' => $allCards->where('status', BaStatus::Selesai)->values(),
+                'restricted_for_vendor' => true,
             ],
         ];
 
@@ -117,7 +130,7 @@ class KanbanController extends Controller
             'priorities' => $priorities,
             'vendorOnly' => $vendorOnly,
             'totalCards' => $allCards->count(),
-            'canManage' => ! $user->isDirektur(),
+            'canManage' => ! $user->isDirektur() && ! $user->isVendor(),
         ]);
     }
 
@@ -135,19 +148,51 @@ class KanbanController extends Controller
             ], 403);
         }
 
-        if ($user->isVendor() && $beritaAcara->created_by !== $user->id && empty($beritaAcara->nama_vendor)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda tidak memiliki otorisasi untuk memperbarui pekerjaan ini.',
-            ], 403);
-        }
-
         $validated = $request->validate([
             'status' => ['required', new Enum(BaStatus::class)],
         ]);
 
         $oldStatus = $beritaAcara->status;
         $newStatus = BaStatus::from($validated['status']);
+
+        // Vendor restriction logic
+        if ($user->isVendor()) {
+            $assignedVendor = trim((string) $beritaAcara->nama_vendor);
+            $userName = trim($user->name);
+            $isAssigned = ($beritaAcara->created_by === $user->id) || ($assignedVendor !== '' && (
+                strcasecmp($assignedVendor, $userName) === 0
+                || stripos($userName, $assignedVendor) !== false
+                || stripos($assignedVendor, $userName) !== false
+            ));
+
+            if (! $isAssigned) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki otorisasi untuk memperbarui pekerjaan ini.',
+                ], 403);
+            }
+
+            $staffOnlyStatuses = [
+                BaStatus::PenyerahanTesting,
+                BaStatus::MenungguTandaTangan,
+                BaStatus::Selesai,
+                BaStatus::Diarsipkan,
+            ];
+
+            if (in_array($newStatus, $staffOnlyStatuses, true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tahap Penyerahan/Testing dan Selesai hanya dapat diubah oleh Staf IT atau Superadmin.',
+                ], 403);
+            }
+
+            if (in_array($oldStatus, $staffOnlyStatuses, true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pekerjaan pada tahap Penyerahan/Testing atau Selesai hanya dapat diubah oleh Staf IT atau Superadmin.',
+                ], 403);
+            }
+        }
 
         if ($oldStatus === $newStatus) {
             return response()->json([

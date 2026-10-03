@@ -104,7 +104,7 @@ class BeritaAcara extends Model
 
     public function canBeEditedBy(User $user): bool
     {
-        if ($this->isFinalized()) {
+        if ($this->isFinalized() || $user->isVendor() || $user->isDirektur()) {
             return false;
         }
 

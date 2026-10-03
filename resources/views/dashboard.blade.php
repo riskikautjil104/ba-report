@@ -44,11 +44,11 @@
                         <span>Pantau Progres Seluruh BA</span>
                     </a>
                 @elseif ($user->isVendor())
-                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                    <a href="{{ route('kanban.index') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
                         </svg>
-                        <span>+ Laporan Berita Acara Vendor</span>
+                        <span>Papan Kanban Vendor</span>
                     </a>
                 @else
                     <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-3 text-xs shadow-xl">
@@ -225,11 +225,13 @@
                     @if ($recentBas->isEmpty())
                         <div class="py-8 text-center text-slate-400 text-xs">
                             Belum ada Berita Acara kebutuhan yang didaftarkan.
-                            <div class="mt-3">
-                                <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-4 py-2 text-xs">
-                                    + Buat Audit Kebutuhan Sekarang
-                                </a>
-                            </div>
+                            @can('create', App\Models\BeritaAcara::class)
+                                <div class="mt-3">
+                                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-4 py-2 text-xs">
+                                        + Buat Audit Kebutuhan Sekarang
+                                    </a>
+                                </div>
+                            @endcan
                         </div>
                     @else
                         <div class="divide-y divide-slate-100">
@@ -316,10 +318,17 @@
             <div class="card-3d p-6 bg-white space-y-3 text-xs">
                 <h4 class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">Menu Navigasi Cepat</h4>
                 <div class="space-y-1.5">
-                    <a href="{{ route('berita-acara.create') }}" class="block p-2.5 rounded-xl bg-sky-50/50 hover:bg-sky-100/70 text-sky-800 transition font-bold flex items-center justify-between">
-                        <span>+ Buat Audit Berita Acara</span>
-                        <span>&rarr;</span>
-                    </a>
+                    @can('create', App\Models\BeritaAcara::class)
+                        <a href="{{ route('berita-acara.create') }}" class="block p-2.5 rounded-xl bg-sky-50/50 hover:bg-sky-100/70 text-sky-800 transition font-bold flex items-center justify-between">
+                            <span>+ Buat Audit Berita Acara</span>
+                            <span>&rarr;</span>
+                        </a>
+                    @else
+                        <a href="{{ route('kanban.index') }}" class="block p-2.5 rounded-xl bg-sky-50/50 hover:bg-sky-100/70 text-sky-800 transition font-bold flex items-center justify-between">
+                            <span>Papan Kanban Vendor & IT</span>
+                            <span>&rarr;</span>
+                        </a>
+                    @endcan
                     <a href="{{ route('berita-acara.index') }}" class="block p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition font-semibold text-slate-700 flex items-center justify-between">
                         <span>Daftar Berita Acara & Vendor</span>
                         <span>&rarr;</span>

@@ -35,12 +35,14 @@
                         </a>
                     @endif
 
-                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-4 py-2.5 text-xs shadow-md ml-auto md:ml-0">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>+ Buat BA Baru</span>
-                    </a>
+                    @can('create', App\Models\BeritaAcara::class)
+                        <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-4 py-2.5 text-xs shadow-md ml-auto md:ml-0">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>+ Buat BA Baru</span>
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -121,11 +123,13 @@
                 <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                     Mulai catat audit kebutuhan perbaikan dari unit ruangan untuk ditindaklanjuti secara teknis atau diserahkan ke vendor rekanan.
                 </p>
-                <div class="mt-5">
-                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-2.5 text-xs shadow-md">
-                        + Buat Berita Acara Baru
-                    </a>
-                </div>
+                @can('create', App\Models\BeritaAcara::class)
+                    <div class="mt-5">
+                        <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-5 py-2.5 text-xs shadow-md">
+                            + Buat Berita Acara Baru
+                        </a>
+                    </div>
+                @endcan
             </div>
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

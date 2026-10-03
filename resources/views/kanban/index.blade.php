@@ -17,14 +17,14 @@
             </p>
         </div>
         <div class="flex items-center flex-wrap gap-2.5 shrink-0">
-            @if ($canManage)
+            @can('create', App\Models\BeritaAcara::class)
                 <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary px-4 py-2.5 text-xs shadow-md flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>+ Catat Pekerjaan</span>
                 </a>
-            @else
+            @elseif (auth()->user()->isDirektur())
                 <span class="badge-3d bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs py-2 px-3 flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -32,7 +32,14 @@
                     </svg>
                     <span>Mode Pemantauan Eksekutif</span>
                 </span>
-            @endif
+            @elseif (auth()->user()->isVendor())
+                <span class="badge-3d bg-sky-50 text-sky-700 border border-sky-200 text-xs py-2 px-3 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <span>Portal Vendor (Monitoring & Eksekusi)</span>
+                </span>
+            @endcan
 
             <a href="{{ route('berita-acara.index') }}" class="btn-3d-light px-3.5 py-2.5 text-xs text-slate-600 flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,9 +132,9 @@
         </button>
     </div>
 
-    <!-- Horizontal Kanban Board Grid -->
+    <!-- Horizontal Kanban Board Grid (6 Kolom Workflow) -->
     <div class="overflow-x-auto pb-4">
-        <div class="flex gap-5 min-w-[1250px] items-start">
+        <div class="flex gap-4 min-w-[1550px] items-start">
             @foreach ($columns as $statusKey => $column)
                 <div 
                     class="flex-1 bg-slate-50/90 rounded-2xl border border-sky-100/80 p-3.5 flex flex-col min-h-[580px] shadow-sm transition"
@@ -142,6 +149,7 @@
                             <h3 class="text-xs font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
                                 <span class="w-2.5 h-2.5 rounded-full 
                                     @if($column['color'] === 'slate') bg-slate-400
+                                    @elseif($column['color'] === 'purple') bg-purple-500
                                     @elseif($column['color'] === 'sky') bg-sky-500
                                     @elseif($column['color'] === 'amber') bg-amber-500
                                     @elseif($column['color'] === 'indigo') bg-indigo-500
@@ -152,6 +160,7 @@
                             </h3>
                             <span class="badge-3d text-[11px] font-black px-2 py-0.5 
                                 @if($column['color'] === 'slate') bg-slate-200 text-slate-800
+                                @elseif($column['color'] === 'purple') bg-purple-100 text-purple-800
                                 @elseif($column['color'] === 'sky') bg-sky-100 text-sky-800
                                 @elseif($column['color'] === 'amber') bg-amber-100 text-amber-800
                                 @elseif($column['color'] === 'indigo') bg-indigo-100 text-indigo-800
@@ -163,14 +172,31 @@
                         <p class="text-[10px] text-slate-400 mt-1 line-clamp-1">
                             {{ $column['description'] }}
                         </p>
+                        @if ($column['restricted_for_vendor'] && auth()->user()->isVendor())
+                            <div class="mt-1.5 flex items-center gap-1 text-[9.5px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/80 font-bold">
+                                <svg class="w-3 h-3 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                <span>Hanya Staf & Superadmin</span>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Cards Container -->
                     <div class="flex-1 space-y-3 kanban-column-body min-h-[450px]" id="column-{{ $statusKey }}">
                         @forelse ($column['cards'] as $card)
+                            @php
+                                $currentUser = auth()->user();
+                                $isLockedForUser = $currentUser->isDirektur() || ($currentUser->isVendor() && in_array($card->status, [
+                                    \App\Enums\BaStatus::PenyerahanTesting,
+                                    \App\Enums\BaStatus::MenungguTandaTangan,
+                                    \App\Enums\BaStatus::Selesai,
+                                    \App\Enums\BaStatus::Diarsipkan
+                                ], true));
+                            @endphp
                             <div 
-                                class="card-3d p-4 bg-white space-y-2.5 cursor-grab active:cursor-grabbing hover:shadow-lg transition-all duration-200 group border border-sky-100/70"
-                                draggable="{{ $canManage ? 'true' : 'false' }}"
+                                class="card-3d p-4 bg-white space-y-2.5 hover:shadow-lg transition-all duration-200 group border border-sky-100/70 {{ ! $isLockedForUser ? 'cursor-grab active:cursor-grabbing' : 'opacity-90' }}"
+                                draggable="{{ ! $isLockedForUser ? 'true' : 'false' }}"
                                 data-id="{{ $card->id }}"
                                 data-status="{{ $statusKey }}"
                                 @dragstart="onDragStart($event, {{ $card->id }})"
@@ -216,18 +242,21 @@
 
                                     <div class="flex items-center gap-1.5">
                                         <!-- Quick Move Select for Mobile / Accessibility -->
-                                        @if ($canManage)
+                                        @if (! $isLockedForUser)
                                             <select 
                                                 class="text-[10px] py-0.5 px-1 bg-white border border-slate-200 rounded text-slate-600 focus:ring-0 focus:border-sky-500"
                                                 @change="changeStatus({{ $card->id }}, $event.target.value)"
                                                 title="Pindah Status"
                                             >
                                                 <option value="" disabled selected>&bull;&bull;&bull;</option>
-                                                <option value="draft">Draft</option>
-                                                <option value="dalam_penanganan">Dikerjakan</option>
-                                                <option value="tertunda">Pending</option>
-                                                <option value="menunggu_tanda_tangan">Verifikasi</option>
-                                                <option value="selesai">Selesai</option>
+                                                <option value="draft">1. Baru</option>
+                                                <option value="review">2. Review</option>
+                                                <option value="dalam_penanganan">3. Dikerjakan</option>
+                                                <option value="tertunda">4. Pending</option>
+                                                @if (! $currentUser->isVendor())
+                                                    <option value="penyerahan_testing">5. Penyerahan/Testing</option>
+                                                    <option value="selesai">6. Selesai</option>
+                                                @endif
                                             </select>
                                         @endif
 
@@ -255,6 +284,8 @@
 <script>
 function kanbanBoard() {
     return {
+        isVendor: {{ auth()->user()->isVendor() ? 'true' : 'false' }},
+        isDirektur: {{ auth()->user()->isDirektur() ? 'true' : 'false' }},
         draggedCardId: null,
         toast: {
             visible: false,
@@ -272,6 +303,10 @@ function kanbanBoard() {
             }, 3500);
         },
         onDragStart(event, id) {
+            if (this.isDirektur) {
+                event.preventDefault();
+                return;
+            }
             this.draggedCardId = id;
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('text/plain', id);
@@ -290,6 +325,12 @@ function kanbanBoard() {
             event.currentTarget.classList.remove('bg-sky-100/60', 'border-sky-300');
             const id = this.draggedCardId || event.dataTransfer.getData('text/plain');
             if (!id) return;
+
+            if (this.isVendor && (newStatus === 'penyerahan_testing' || newStatus === 'menunggu_tanda_tangan' || newStatus === 'selesai')) {
+                this.showToast('Tahap Penyerahan/Testing dan Selesai hanya dapat diubah oleh Staf IT atau Superadmin.', 'error');
+                return;
+            }
+
             this.changeStatus(id, newStatus);
         },
         async changeStatus(id, newStatus) {

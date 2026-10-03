@@ -77,14 +77,16 @@
             </div>
 
             <!-- Dedicated Primary Action Button -->
-            <div class="px-4 pt-4 pb-2 shrink-0">
-                <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary w-full py-2.5 text-xs shadow-md flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span>+ Buat Berita Acara</span>
-                </a>
-            </div>
+            @can('create', App\Models\BeritaAcara::class)
+                <div class="px-4 pt-4 pb-2 shrink-0">
+                    <a href="{{ route('berita-acara.create') }}" class="btn-3d-primary w-full py-2.5 text-xs shadow-md flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>+ Buat Berita Acara</span>
+                    </a>
+                </div>
+            @endcan
 
             <!-- Navigation Links -->
             <nav class="flex-1 px-4 py-3 space-y-1 overflow-y-auto">
@@ -256,17 +258,30 @@
                         <span class="text-[10px] mt-0.5">Audit BA</span>
                     </a>
 
-                    <!-- 3. Tombol Buat (Tengah Elevated 3D) -->
-                    <div class="flex flex-col items-center -mt-5">
-                        <a href="{{ route('berita-acara.create') }}" 
-                           class="w-12 h-12 rounded-full btn-3d-primary flex items-center justify-center text-white shadow-lg border-2 border-white transition-transform active:scale-95"
-                           aria-label="Buat Berita Acara Baru">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </a>
-                        <span class="text-[9px] font-bold text-sky-700 mt-0.5">Buat BA</span>
-                    </div>
+                    <!-- 3. Tombol Tengah Elevated 3D -->
+                    @can('create', App\Models\BeritaAcara::class)
+                        <div class="flex flex-col items-center -mt-5">
+                            <a href="{{ route('berita-acara.create') }}" 
+                               class="w-12 h-12 rounded-full btn-3d-primary flex items-center justify-center text-white shadow-lg border-2 border-white transition-transform active:scale-95"
+                               aria-label="Buat Berita Acara Baru">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </a>
+                            <span class="text-[9px] font-bold text-sky-700 mt-0.5">Buat BA</span>
+                        </div>
+                    @else
+                        <div class="flex flex-col items-center -mt-5">
+                            <a href="{{ route('kanban.index') }}" 
+                               class="w-12 h-12 rounded-full btn-3d-primary flex items-center justify-center text-white shadow-lg border-2 border-white transition-transform active:scale-95"
+                               aria-label="Papan Kanban">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                                </svg>
+                            </a>
+                            <span class="text-[9px] font-bold text-sky-700 mt-0.5">Kanban</span>
+                        </div>
+                    @endcan
 
                     <!-- 4. Audit Ruangan / Kebutuhan User -->
                     <a href="{{ route('audit-kebutuhan.index') }}" 

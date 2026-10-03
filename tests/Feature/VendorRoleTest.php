@@ -106,37 +106,143 @@ class VendorRoleTest extends TestCase
         $showResponse->assertSee('Server Farm Lt 3');
     }
 
-    public function test_vendor_can_create_new_berita_acara_report(): void
+    public function test_vendor_cannot_create_or_update_or_delete_berita_acara(): void
     {
-        $payload = [
+        $baWithVendor = BeritaAcara::create([
+            'nomor' => 'BA/IT/2026/10/0101',
+            'tanggal' => now()->toDateString(),
+            'kategori_id' => $this->category->id,
+            'lokasi' => 'Server Farm Lt 3',
+            'prioritas' => BaPriority::Tinggi,
+            'status' => BaStatus::Draft,
+            'pelapor_nama' => 'Staf IT',
+            'pelapor_unit' => 'Ruang IT',
+            'keluhan' => 'Switch Core mati',
+            'nama_vendor' => 'PT Multi Medika Solusindo',
+            'kontak_vendor' => '081299998888',
+            'created_by' => $this->staf->id,
+            'is_archived' => false,
+        ]);
+
+        // 1. Cannot access create form
+        $this->actingAs($this->vendor)->get(route('berita-acara.create'))
+            ->assertForbidden();
+
+        // 2. Cannot post store
+        $this->actingAs($this->vendor)->post(route('berita-acara.store'), [
             'tanggal' => now()->toDateString(),
             'kategori_id' => $this->category->id,
             'lokasi' => 'Ruang Server SIMRS',
             'prioritas' => BaPriority::Sedang->value,
             'status' => BaStatus::Draft->value,
-            'pelapor_nama' => 'Ir. Hartono (Vendor Lead)',
-            'pelapor_jabatan' => 'Field Engineer',
-            'pelapor_unit' => 'Rekanan Pihak Ketiga',
-            'pelapor_kontak' => '081234567890',
-            'keluhan' => 'Penggantian modul PSU Switch Core 48 Port',
-            'hasil_pemeriksaan' => 'PSU lama mengalami lonjakan voltase',
-            'penyebab' => 'Komponen kapasitor aus',
-            'tindakan' => 'Penggantian unit PSU redundant baru',
-            'kebutuhan' => '1 unit sparepart modul asli',
-            'nama_vendor' => 'PT Multi Medika Solusindo',
-            'kontak_vendor' => '081299998888',
-            'catatan_vendor' => 'Garansi penggantian unit berlaku 1 tahun kalender',
-            'kesimpulan' => 'Perangkat switch kembali normal redundant',
-            'tindak_lanjut' => 'Pemantauan suhu rak server',
-        ];
+            'pelapor_nama' => 'Ir. Hartono',
+            'pelapor_unit' => 'Vendor Unit',
+            'keluhan' => 'Mencoba membuat berita acara',
+        ])->assertForbidden();
 
-        $response = $this->actingAs($this->vendor)->post(route('berita-acara.store'), $payload);
+        // 3. Cannot access edit form
+        $this->actingAs($this->vendor)->get(route('berita-acara.edit', $baWithVendor))
+            ->assertForbidden();
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('berita_acaras', [
+        // 4. Cannot update
+        $this->actingAs($this->vendor)->put(route('berita-acara.update', $baWithVendor), [
+            'tanggal' => now()->toDateString(),
+            'kategori_id' => $this->category->id,
+            'lokasi' => 'Server Farm Lt 3 Diubah',
+            'prioritas' => BaPriority::Tinggi->value,
+            'status' => BaStatus::Draft->value,
+            'pelapor_nama' => 'Staf IT',
+            'pelapor_unit' => 'Ruang IT',
+            'keluhan' => 'Switch Core mati diubah',
+        ])->assertForbidden();
+
+        // 5. Cannot delete
+        $this->actingAs($this->vendor)->delete(route('berita-acara.destroy', $baWithVendor))
+            ->assertForbidden();
+    }
+
+    public function test_vendor_can_update_status_between_allowed_kanban_columns(): void
+    {
+        $baWithVendor = BeritaAcara::create([
+            'nomor' => 'BA/IT/2026/10/0103',
+            'tanggal' => now()->toDateString(),
+            'kategori_id' => $this->category->id,
+            'lokasi' => 'Poli Penyakit Dalam',
+            'prioritas' => BaPriority::Sedang,
+            'status' => BaStatus::Draft,
+            'pelapor_nama' => 'dr. Sp.PD',
+            'pelapor_unit' => 'Poli',
+            'keluhan' => 'Perbaikan PC All in One',
             'nama_vendor' => 'PT Multi Medika Solusindo',
-            'created_by' => $this->vendor->id,
+            'created_by' => $this->staf->id,
         ]);
+
+        // 1. Move from Draft to Review
+        $responseReview = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::Review->value,
+        ]);
+        $responseReview->assertOk()->assertJson(['success' => true]);
+
+        // 2. Move from Review to Develop/Dikerjakan
+        $responseDevelop = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::DalamPenanganan->value,
+        ]);
+        $responseDevelop->assertOk()->assertJson(['success' => true]);
+
+        // 3. Move from Develop to Tunda/Pending
+        $responsePending = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::Tertunda->value,
+        ]);
+        $responsePending->assertOk()->assertJson(['success' => true]);
+    }
+
+    public function test_vendor_cannot_update_status_to_or_from_penyerahan_testing_or_selesai(): void
+    {
+        $baWithVendor = BeritaAcara::create([
+            'nomor' => 'BA/IT/2026/10/0104',
+            'tanggal' => now()->toDateString(),
+            'kategori_id' => $this->category->id,
+            'lokasi' => 'Ruang ICU',
+            'prioritas' => BaPriority::Mendesak,
+            'status' => BaStatus::DalamPenanganan,
+            'pelapor_nama' => 'dr. ICU',
+            'pelapor_unit' => 'ICU',
+            'keluhan' => 'Monitor sentral offline',
+            'nama_vendor' => 'PT Multi Medika Solusindo',
+            'created_by' => $this->staf->id,
+        ]);
+
+        // 1. Vendor cannot move to Penyerahan / Testing
+        $responseTesting = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::PenyerahanTesting->value,
+        ]);
+        $responseTesting->assertForbidden()
+            ->assertJson([
+                'success' => false,
+                'message' => 'Tahap Penyerahan/Testing dan Selesai hanya dapat diubah oleh Staf IT atau Superadmin.',
+            ]);
+
+        // 2. Vendor cannot move to Selesai
+        $responseSelesai = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::Selesai->value,
+        ]);
+        $responseSelesai->assertForbidden();
+
+        // 3. But Staff CAN move it to Penyerahan / Testing
+        $staffTesting = $this->actingAs($this->staf)->patchJson(route('kanban.update-status', $baWithVendor), [
+            'status' => BaStatus::PenyerahanTesting->value,
+        ]);
+        $staffTesting->assertOk()->assertJson(['success' => true]);
+
+        // 4. Once in Penyerahan / Testing, Vendor cannot move it back
+        $vendorMoveBack = $this->actingAs($this->vendor)->patchJson(route('kanban.update-status', $baWithVendor->fresh()), [
+            'status' => BaStatus::DalamPenanganan->value,
+        ]);
+        $vendorMoveBack->assertForbidden()
+            ->assertJson([
+                'success' => false,
+                'message' => 'Pekerjaan pada tahap Penyerahan/Testing atau Selesai hanya dapat diubah oleh Staf IT atau Superadmin.',
+            ]);
     }
 
     public function test_vendor_can_view_audit_kebutuhan_created_by_staff_and_superadmin(): void

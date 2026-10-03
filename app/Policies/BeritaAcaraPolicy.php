@@ -44,7 +44,7 @@ class BeritaAcaraPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isActive();
+        return $user->isActive() && ! $user->isVendor() && ! $user->isDirektur();
     }
 
     /**
@@ -52,7 +52,7 @@ class BeritaAcaraPolicy
      */
     public function update(User $user, BeritaAcara $beritaAcara): bool
     {
-        if (! $user->isActive() || $beritaAcara->isFinalized()) {
+        if (! $user->isActive() || $beritaAcara->isFinalized() || $user->isVendor() || $user->isDirektur()) {
             return false;
         }
 
@@ -68,7 +68,7 @@ class BeritaAcaraPolicy
      */
     public function delete(User $user, BeritaAcara $beritaAcara): bool
     {
-        if (! $user->isActive() || $beritaAcara->isFinalized()) {
+        if (! $user->isActive() || $beritaAcara->isFinalized() || $user->isVendor() || $user->isDirektur()) {
             return false;
         }
 
