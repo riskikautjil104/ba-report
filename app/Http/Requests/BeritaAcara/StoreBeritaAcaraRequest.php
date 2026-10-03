@@ -47,6 +47,7 @@ class StoreBeritaAcaraRequest extends FormRequest
             'catatan_vendor' => ['nullable', 'string'],
             'kesimpulan' => ['nullable', 'string'],
             'tindak_lanjut' => ['nullable', 'string'],
+            'from_audit_id' => ['nullable', 'integer', 'exists:audit_kebutuhans,id'],
         ];
     }
 }

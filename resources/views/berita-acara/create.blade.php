@@ -29,8 +29,26 @@
         </div>
     @endif
 
+    @if (isset($fromAudit) && $fromAudit)
+        <div class="card-3d p-4 bg-sky-50 border-sky-200 text-sky-800 text-xs flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                    <span class="font-bold">Dibuat Berdasarkan Lembar Audit Kebutuhan:</span>
+                    <span class="font-mono ml-1">{{ $fromAudit->nomor }} ({{ $fromAudit->unit_kerja }})</span>
+                </div>
+            </div>
+            <span class="badge-3d text-[10px] bg-sky-100 text-sky-700">Form Terisi Otomatis</span>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('berita-acara.store') }}" class="space-y-6">
         @csrf
+        @if (isset($fromAudit) && $fromAudit)
+            <input type="hidden" name="from_audit_id" value="{{ $fromAudit->id }}">
+        @endif
 
         <!-- Section 1: Informasi Dokumen & Klasifikasi -->
         <div class="card-3d p-6 bg-white space-y-5">
@@ -50,7 +68,7 @@
 
                 <div>
                     <label for="tanggal" class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Kegiatan <span class="text-rose-500">*</span></label>
-                    <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required class="input-3d text-xs">
+                    <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', (isset($fromAudit) && $fromAudit && $fromAudit->tanggal_audit) ? $fromAudit->tanggal_audit->format('Y-m-d') : date('Y-m-d')) }}" required class="input-3d text-xs">
                 </div>
 
                 <div>
@@ -58,7 +76,7 @@
                     <select id="kategori_id" name="kategori_id" required class="input-3d text-xs">
                         <option value="">Pilih Kategori</option>
                         @foreach ($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ old('kategori_id') == $cat->id ? 'selected' : '' }}>
+                            <option value="{{ $cat->id }}" {{ old('kategori_id', $fromAudit?->kategori_id) == $cat->id ? 'selected' : '' }}>
                                 {{ $cat->name }}
                             </option>
                         @endforeach
@@ -69,7 +87,7 @@
                     <label for="prioritas" class="block text-xs font-semibold text-slate-700 mb-1">Prioritas <span class="text-rose-500">*</span></label>
                     <select id="prioritas" name="prioritas" required class="input-3d text-xs">
                         @foreach ($priorities as $p)
-                            <option value="{{ $p->value }}" {{ old('prioritas', 'sedang') == $p->value ? 'selected' : '' }}>
+                            <option value="{{ $p->value }}" {{ old('prioritas', $fromAudit?->prioritas?->value ?? 'sedang') == $p->value ? 'selected' : '' }}>
                                 {{ $p->label() }}
                             </option>
                         @endforeach
@@ -91,27 +109,27 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="pelapor_nama" class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap Pelapor <span class="text-rose-500">*</span></label>
-                    <input type="text" id="pelapor_nama" name="pelapor_nama" value="{{ old('pelapor_nama') }}" required placeholder="Contoh: dr. Ahmad, Sp.A / Ns. Siti" class="input-3d text-xs">
+                    <input type="text" id="pelapor_nama" name="pelapor_nama" value="{{ old('pelapor_nama', $fromAudit?->nama_responden) }}" required placeholder="Contoh: dr. Ahmad, Sp.A / Ns. Siti" class="input-3d text-xs">
                 </div>
 
                 <div>
                     <label for="pelapor_jabatan" class="block text-xs font-semibold text-slate-700 mb-1">Jabatan / Profesi</label>
-                    <input type="text" id="pelapor_jabatan" name="pelapor_jabatan" value="{{ old('pelapor_jabatan') }}" placeholder="Contoh: Kepala Ruangan / Perawat / Dokter" class="input-3d text-xs">
+                    <input type="text" id="pelapor_jabatan" name="pelapor_jabatan" value="{{ old('pelapor_jabatan', $fromAudit?->jabatan_responden) }}" placeholder="Contoh: Kepala Ruangan / Perawat / Dokter" class="input-3d text-xs">
                 </div>
 
                 <div>
                     <label for="pelapor_unit" class="block text-xs font-semibold text-slate-700 mb-1">Ruangan / Unit Kerja <span class="text-rose-500">*</span></label>
-                    <input type="text" id="pelapor_unit" name="pelapor_unit" value="{{ old('pelapor_unit') }}" required placeholder="Contoh: IGD, Rawat Inap Melati, Poli Anak" class="input-3d text-xs">
+                    <input type="text" id="pelapor_unit" name="pelapor_unit" value="{{ old('pelapor_unit', $fromAudit?->unit_kerja) }}" required placeholder="Contoh: IGD, Rawat Inap Melati, Poli Anak" class="input-3d text-xs">
                 </div>
 
                 <div>
                     <label for="pelapor_kontak" class="block text-xs font-semibold text-slate-700 mb-1">Nomor Kontak / WhatsApp</label>
-                    <input type="text" id="pelapor_kontak" name="pelapor_kontak" value="{{ old('pelapor_kontak') }}" placeholder="Contoh: 0812xxxxxxxx" class="input-3d text-xs">
+                    <input type="text" id="pelapor_kontak" name="pelapor_kontak" value="{{ old('pelapor_kontak', $fromAudit?->kontak_responden) }}" placeholder="Contoh: 0812xxxxxxxx" class="input-3d text-xs">
                 </div>
 
                 <div class="sm:col-span-2">
                     <label for="lokasi" class="block text-xs font-semibold text-slate-700 mb-1">Detail Lokasi Fisik / Gedung <span class="text-rose-500">*</span></label>
-                    <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}" required placeholder="Contoh: Gedung A Lantai 2, Ruang Nurse Station ICU" class="input-3d text-xs">
+                    <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi', $fromAudit ? ($fromAudit->lokasi_gedung ?: $fromAudit->unit_kerja) : '') }}" required placeholder="Contoh: Gedung A Lantai 2, Ruang Nurse Station ICU" class="input-3d text-xs">
                 </div>
             </div>
         </div>
@@ -128,7 +146,7 @@
 
             <div>
                 <label for="keluhan" class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Keluhan / Permasalahan <span class="text-rose-500">*</span></label>
-                <textarea id="keluhan" name="keluhan" rows="3" required placeholder="Jelaskan secara rinci permasalahan perangkat/jaringan/sistem yang dialami..." class="input-3d text-xs leading-relaxed">{{ old('keluhan') }}</textarea>
+                <textarea id="keluhan" name="keluhan" rows="3" required placeholder="Jelaskan secara rinci permasalahan perangkat/jaringan/sistem yang dialami..." class="input-3d text-xs leading-relaxed">{{ old('keluhan', $fromAudit?->keluhan_kendala) }}</textarea>
             </div>
         </div>
 
@@ -145,7 +163,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="hasil_pemeriksaan" class="block text-xs font-semibold text-slate-700 mb-1">Hasil Pemeriksaan Teknis</label>
-                    <textarea id="hasil_pemeriksaan" name="hasil_pemeriksaan" rows="3" placeholder="Pengecekan fisik perangkat, konektivitas ping, log error aplikasi..." class="input-3d text-xs leading-relaxed">{{ old('hasil_pemeriksaan') }}</textarea>
+                    <textarea id="hasil_pemeriksaan" name="hasil_pemeriksaan" rows="3" placeholder="Pengecekan fisik perangkat, konektivitas ping, log error aplikasi..." class="input-3d text-xs leading-relaxed">{{ old('hasil_pemeriksaan', $fromAudit?->analisis_it) }}</textarea>
                 </div>
 
                 <div>
@@ -168,12 +186,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="tindakan" class="block text-xs font-semibold text-slate-700 mb-1">Tindakan / Solusi Yang Dikerjakan</label>
-                    <textarea id="tindakan" name="tindakan" rows="3" placeholder="Crimping ulang konektor RJ45, setting IP static, backup database SIMRS..." class="input-3d text-xs leading-relaxed">{{ old('tindakan') }}</textarea>
+                    <textarea id="tindakan" name="tindakan" rows="3" placeholder="Crimping ulang konektor RJ45, setting IP static, backup database SIMRS..." class="input-3d text-xs leading-relaxed">{{ old('tindakan', $fromAudit?->rekomendasi_it) }}</textarea>
                 </div>
 
                 <div>
                     <label for="kebutuhan" class="block text-xs font-semibold text-slate-700 mb-1">Audit Kebutuhan Material / Suku Cadang</label>
-                    <textarea id="kebutuhan" name="kebutuhan" rows="3" placeholder="Kabel FO 100m, Switch Gigabit Managed 24-Port, SSD NVMe 512GB, Cartridge Laser..." class="input-3d text-xs leading-relaxed">{{ old('kebutuhan') }}</textarea>
+                    <textarea id="kebutuhan" name="kebutuhan" rows="3" placeholder="Kabel FO 100m, Switch Gigabit Managed 24-Port, SSD NVMe 512GB, Cartridge Laser..." class="input-3d text-xs leading-relaxed">{{ old('kebutuhan', $fromAudit?->keinginan_harapan) }}</textarea>
                 </div>
             </div>
         </div>
@@ -202,17 +220,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="nama_vendor" class="block text-xs font-semibold text-slate-700 mb-1">Nama Perusahaan / Rekanan Vendor</label>
-                    <input type="text" id="nama_vendor" name="nama_vendor" value="{{ old('nama_vendor') }}" placeholder="Contoh: PT. Telkom Indonesia / CV. Maluku Cyber Solusi" class="input-3d text-xs">
+                    <input type="text" id="nama_vendor" name="nama_vendor" value="{{ old('nama_vendor', $fromAudit?->nama_vendor) }}" placeholder="Contoh: PT. Telkom Indonesia / CV. Maluku Cyber Solusi" class="input-3d text-xs">
                 </div>
 
                 <div>
                     <label for="kontak_vendor" class="block text-xs font-semibold text-slate-700 mb-1">Kontak Person / Telepon Vendor</label>
-                    <input type="text" id="kontak_vendor" name="kontak_vendor" value="{{ old('kontak_vendor') }}" placeholder="Contoh: 08124233xxxx (Bpk. Fajar - Project Officer)" class="input-3d text-xs">
+                    <input type="text" id="kontak_vendor" name="kontak_vendor" value="{{ old('kontak_vendor', $fromAudit?->kontak_vendor) }}" placeholder="Contoh: 08124233xxxx (Bpk. Fajar - Project Officer)" class="input-3d text-xs">
                 </div>
 
                 <div class="sm:col-span-2">
                     <label for="catatan_vendor" class="block text-xs font-semibold text-slate-700 mb-1">Instruksi & Catatan Khusus Pekerjaan Vendor</label>
-                    <textarea id="catatan_vendor" name="catatan_vendor" rows="2" placeholder="Contoh: Pemasangan grounding server, penarikan kabel fiber optik gedung bedah sentral, batas pengerjaan 3 hari kalender..." class="input-3d text-xs leading-relaxed">{{ old('catatan_vendor') }}</textarea>
+                    <textarea id="catatan_vendor" name="catatan_vendor" rows="2" placeholder="Contoh: Pemasangan grounding server, penarikan kabel fiber optik gedung bedah sentral, batas pengerjaan 3 hari kalender..." class="input-3d text-xs leading-relaxed">{{ old('catatan_vendor', $fromAudit?->catatan_vendor) }}</textarea>
                 </div>
             </div>
         </div>

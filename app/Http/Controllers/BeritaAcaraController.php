@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\AuditStatus;
 use App\Enums\BaPriority;
 use App\Enums\BaStatus;
 use App\Enums\ParticipantType;
@@ -12,6 +13,7 @@ use App\Http\Requests\BeritaAcara\StoreBeritaAcaraRequest;
 use App\Http\Requests\BeritaAcara\StoreHandlingLogRequest;
 use App\Http\Requests\BeritaAcara\UpdateBeritaAcaraRequest;
 use App\Models\Attachment;
+use App\Models\AuditKebutuhan;
 use App\Models\BeritaAcara;
 use App\Models\Category;
 use App\Models\HandlingLog;
@@ -88,17 +90,23 @@ class BeritaAcaraController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
         Gate::authorize('create', BeritaAcara::class);
 
         $categories = Category::active()->orderBy('name')->get();
         $nextNomor = $this->numberGenerator->generate();
 
+        $fromAudit = null;
+        if ($request->filled('from_audit')) {
+            $fromAudit = AuditKebutuhan::find($request->input('from_audit'));
+        }
+
         return view('berita-acara.create', [
             'categories' => $categories,
             'nextNomor' => $nextNomor,
             'priorities' => BaPriority::cases(),
+            'fromAudit' => $fromAudit,
         ]);
     }
 
@@ -164,6 +172,16 @@ class BeritaAcaraController extends Controller
             ]);
 
             $this->auditService->log('create_berita_acara', $ba, null, $ba->toArray());
+
+            if ($request->filled('from_audit_id')) {
+                $audit = AuditKebutuhan::find($request->input('from_audit_id'));
+                if ($audit) {
+                    $audit->update([
+                        'berita_acara_id' => $ba->id,
+                        'status' => AuditStatus::Selesai,
+                    ]);
+                }
+            }
 
             return $ba;
         });
