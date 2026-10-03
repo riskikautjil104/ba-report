@@ -50,7 +50,7 @@
                         <span>Lihat Berita Acara Terhubung</span>
                     </a>
                 @elseif (! auth()->user()->isVendor())
-                    <a href="{{ route('berita-acara.create', ['from_audit' => $audit->id]) }}" class="btn-3d-primary px-3.5 py-2 text-xs shadow-md">
+                    <a href="{{ route('berita-acara.create', ['from_audit' => $audit->getRouteKey()]) }}" class="btn-3d-primary px-3.5 py-2 text-xs shadow-md">
                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
@@ -334,7 +334,7 @@
                         <div class="p-4 rounded-xl bg-sky-50/60 border border-sky-200 text-xs space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="font-mono font-bold text-sky-800">{{ $audit->beritaAcara->nomor }}</span>
-                                <span class="badge-3d text-[10px] {{ $audit->beritaAcara->status->badgeClass() }}">
+                                <span class="badge-3d text-[10px] {{ $audit->beritaAcara->status->badgeClasses() }}">
                                     {{ $audit->beritaAcara->status->label() }}
                                 </span>
                             </div>
@@ -348,7 +348,7 @@
                     @else
                         <div class="text-xs text-slate-500 space-y-3">
                             <p>Data hasil wawancara ini belum dikonversi menjadi dokumen Berita Acara resmi.</p>
-                            <a href="{{ route('berita-acara.create', ['from_audit' => $audit->id]) }}" class="btn-3d-primary px-4 py-2 text-xs inline-flex items-center gap-1.5">
+                            <a href="{{ route('berita-acara.create', ['from_audit' => $audit->getRouteKey()]) }}" class="btn-3d-primary px-4 py-2 text-xs inline-flex items-center gap-1.5">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>

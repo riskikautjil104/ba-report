@@ -37,6 +37,11 @@ enum BaStatus: string
         };
     }
 
+    public function badgeClass(): string
+    {
+        return $this->badgeClasses();
+    }
+
     public function isEditable(): bool
     {
         return in_array($this, [self::Draft, self::DalamPenanganan, self::Tertunda], true);

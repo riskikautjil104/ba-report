@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\AuditStatus;
 use App\Enums\BaPriority;
 use App\Enums\UserRole;
+use App\Traits\HasEncryptedRouteKey;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ use Illuminate\Support\Carbon;
 
 class AuditKebutuhan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasEncryptedRouteKey, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nomor',

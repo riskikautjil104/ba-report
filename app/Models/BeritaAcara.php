@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\BaPriority;
 use App\Enums\BaStatus;
 use App\Enums\ParticipantType;
+use App\Traits\HasEncryptedRouteKey;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BeritaAcara extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasEncryptedRouteKey, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nomor',

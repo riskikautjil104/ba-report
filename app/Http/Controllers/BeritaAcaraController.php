@@ -101,7 +101,8 @@ class BeritaAcaraController extends Controller
 
         $fromAudit = null;
         if ($request->filled('from_audit')) {
-            $fromAudit = AuditKebutuhan::find($request->input('from_audit'));
+            $fromAuditParam = (string) $request->input('from_audit');
+            $fromAudit = (new AuditKebutuhan)->resolveRouteBinding($fromAuditParam) ?? AuditKebutuhan::find($fromAuditParam);
         }
 
         $registeredVendors = User::where('role', UserRole::Vendor)->where('is_active', true)->orderBy('name')->get();
