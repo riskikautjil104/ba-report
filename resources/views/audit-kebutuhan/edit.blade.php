@@ -292,6 +292,51 @@
                     </div>
                 </div>
             </div>
+        <!-- Section 5: Tanda Tangan Canvas Langsung Perequest / Responden -->
+        <div class="card-3d p-6 bg-white space-y-4" x-data="signatureAuditEdit('{{ $audit->tanda_tangan_responden }}')">
+            <div class="flex items-center justify-between pb-3 border-b border-sky-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-sky-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">5</div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Tanda Tangan Langsung Perequest / Responden Ruangan</h3>
+                        <p class="text-[11px] text-slate-400">Goreskan tanda tangan langsung di layar (HP/Tablet/Mouse) sebagai bukti validasi kebutuhan</p>
+                    </div>
+                </div>
+                <button type="button" @click="clear()" class="btn-3d-light px-3 py-1.5 text-xs text-rose-600 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span>Hapus & Tanda Tangan Ulang</span>
+                </button>
+            </div>
+
+            <div class="relative rounded-2xl border-2 border-dashed border-sky-300 bg-slate-50 overflow-hidden shadow-inner touch-none">
+                <canvas 
+                    id="signatureCanvasEdit" 
+                    width="700" 
+                    height="200" 
+                    class="w-full h-48 bg-white cursor-crosshair block"
+                    @mousedown="startDrawing($event)"
+                    @mousemove="draw($event)"
+                    @mouseup="stopDrawing()"
+                    @mouseleave="stopDrawing()"
+                    @touchstart.prevent="startTouch($event)"
+                    @touchmove.prevent="drawTouch($event)"
+                    @touchend.prevent="stopDrawing()"
+                ></canvas>
+                <div class="absolute bottom-2 right-3 pointer-events-none text-[10px] text-slate-400 font-mono bg-white/80 px-2 py-0.5 rounded border border-slate-200">
+                    ✍️ Sentuh / Tulis di sini
+                </div>
+            </div>
+
+            <input type="hidden" name="tanda_tangan_responden" id="tandaTanganInputEdit" x-model="signatureData">
+
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+                <span :class="hasSignature ? 'text-emerald-600 font-bold' : 'text-slate-400'">
+                    <span x-text="hasSignature ? '✓ Tanda tangan tersimpan' : '(Opsional) Belum ditandatangani'"></span>
+                </span>
+                <span class="text-[11px] text-slate-400">Dapat ditandatangani langsung di smartphone saat keliling</span>
+            </div>
         </div>
 
         <div class="card-3d p-4 bg-white flex items-center justify-between">
@@ -307,4 +352,99 @@
         </div>
     </form>
 </div>
+
+<script>
+    function signatureAuditEdit(existingSignature) {
+        return {
+            canvas: null,
+            ctx: null,
+            isDrawing: false,
+            hasSignature: !!existingSignature,
+            signatureData: existingSignature || '',
+            init() {
+                this.$nextTick(() => {
+                    this.canvas = document.getElementById('signatureCanvasEdit');
+                    if (!this.canvas) return;
+                    this.ctx = this.canvas.getContext('2d');
+                    this.ctx.lineWidth = 2.5;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.lineJoin = 'round';
+                    this.ctx.strokeStyle = '#0f172a';
+
+                    if (existingSignature) {
+                        const img = new Image();
+                        img.onload = () => {
+                            this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+                        };
+                        img.src = existingSignature;
+                    }
+
+                    // Attach to parent form submit
+                    const form = this.canvas.closest('form');
+                    if (form) {
+                        form.addEventListener('submit', () => {
+                            if (this.hasSignature && !this.signatureData.startsWith('data:image')) {
+                                this.signatureData = this.canvas.toDataURL('image/png');
+                            }
+                            document.getElementById('tandaTanganInputEdit').value = this.signatureData;
+                        });
+                    }
+                });
+            },
+            getPos(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            },
+            startDrawing(e) {
+                this.isDrawing = true;
+                const pos = this.getPos(e);
+                this.ctx.beginPath();
+                this.ctx.moveTo(pos.x, pos.y);
+            },
+            draw(e) {
+                if (!this.isDrawing) return;
+                const pos = this.getPos(e);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+                this.hasSignature = true;
+            },
+            startTouch(e) {
+                if (e.touches.length === 1) {
+                    this.isDrawing = true;
+                    const touch = e.touches[0];
+                    const pos = this.getPos(touch);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                }
+            },
+            drawTouch(e) {
+                if (!this.isDrawing || e.touches.length !== 1) return;
+                const touch = e.touches[0];
+                const pos = this.getPos(touch);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+                this.hasSignature = true;
+            },
+            stopDrawing() {
+                this.isDrawing = false;
+                if (this.hasSignature) {
+                    this.signatureData = this.canvas.toDataURL('image/png');
+                    document.getElementById('tandaTanganInputEdit').value = this.signatureData;
+                }
+            },
+            clear() {
+                if (!this.ctx || !this.canvas) return;
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.hasSignature = false;
+                this.signatureData = '';
+                document.getElementById('tandaTanganInputEdit').value = '';
+            }
+        };
+    }
+</script>
 @endsection

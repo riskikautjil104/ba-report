@@ -281,6 +281,46 @@
                     </div>
                 @endif
 
+                <!-- Card: Tanda Tangan Digital Perequest / Responden -->
+                <div class="card-3d p-6 bg-white border border-sky-100">
+                    <div class="flex items-center justify-between pb-3 border-b border-sky-100 mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs">
+                                ✍️
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800">Tanda Tangan Perequest / Responden</h3>
+                                <p class="text-[11px] text-slate-400">Bukti verifikasi langsung dari unit ruangan</p>
+                            </div>
+                        </div>
+                        @if ($audit->tanda_tangan_responden)
+                            <span class="badge-3d text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Terverifikasi
+                            </span>
+                        @else
+                            <span class="badge-3d text-[10px] bg-slate-50 text-slate-600 border border-slate-200">
+                                Belum Ada Tanda Tangan
+                            </span>
+                        @endif
+                    </div>
+
+                    @if ($audit->tanda_tangan_responden)
+                        <div class="p-3 bg-slate-50 rounded-xl border border-sky-200 flex flex-col items-center justify-center">
+                            <img src="{{ $audit->tanda_tangan_responden }}" alt="Tanda Tangan {{ $audit->nama_responden }}" class="max-h-28 object-contain">
+                            <div class="mt-2 text-center text-[11px] text-slate-500 font-medium">
+                                {{ $audit->nama_responden }} ({{ $audit->jabatan_responden ?: $audit->unit_kerja }})
+                            </div>
+                        </div>
+                    @else
+                        <div class="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center text-xs text-slate-400">
+                            <p>Responden belum membubuhkan tanda tangan saat wawancara.</p>
+                            <a href="{{ route('audit-kebutuhan.edit', $audit) }}" class="inline-block mt-2 text-sky-600 font-semibold hover:underline">
+                                + Bubuhkan tanda tangan sekarang &rarr;
+                            </a>
+                        </div>
+                    @endif
+                </div>
+
                 <!-- Card: Hubungan Berita Acara -->
                 <div class="card-3d p-6 bg-white border border-sky-100">
                     <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">

@@ -34,6 +34,7 @@ class AuditKebutuhan extends Model
         'status',
         'nama_vendor',
         'catatan_vendor',
+        'tanda_tangan_responden',
         'berita_acara_id',
         'auditor_id',
     ];

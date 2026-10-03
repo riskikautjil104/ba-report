@@ -37,6 +37,7 @@ class UpdateAuditKebutuhanRequest extends FormRequest
             'status' => ['required', new Enum(AuditStatus::class)],
             'nama_vendor' => ['nullable', 'string', 'max:255'],
             'catatan_vendor' => ['nullable', 'string'],
+            'tanda_tangan_responden' => ['nullable', 'string'],
         ];
     }
 }

@@ -96,6 +96,7 @@ class AuditKebutuhanController extends Controller
             'status' => $validated['status'] ?? AuditStatus::SelesaiWawancara->value,
             'nama_vendor' => $validated['nama_vendor'] ?? null,
             'catatan_vendor' => $validated['catatan_vendor'] ?? null,
+            'tanda_tangan_responden' => $validated['tanda_tangan_responden'] ?? null,
             'auditor_id' => $request->user()->id,
         ]);
 

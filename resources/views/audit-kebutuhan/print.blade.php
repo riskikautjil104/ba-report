@@ -201,8 +201,17 @@
                 <!-- Pihak Responden Ruangan -->
                 <div>
                     <p class="font-semibold text-slate-700">Responden / Staf Ruangan,</p>
-                    <p class="text-[11px] text-slate-500 mb-16">{{ $auditKebutuhan->unit_kerja }}</p>
-                    <p class="font-bold text-slate-900 underline">{{ $auditKebutuhan->nama_responden }}</p>
+                    <p class="text-[11px] text-slate-500 mb-2">{{ $auditKebutuhan->unit_kerja }}</p>
+                    
+                    <div class="h-20 flex items-center justify-center">
+                        @if ($auditKebutuhan->tanda_tangan_responden)
+                            <img src="{{ $auditKebutuhan->tanda_tangan_responden }}" alt="Tanda Tangan {{ $auditKebutuhan->nama_responden }}" class="max-h-16 object-contain">
+                        @else
+                            <div class="h-16"></div>
+                        @endif
+                    </div>
+
+                    <p class="font-bold text-slate-900 underline mt-1">{{ $auditKebutuhan->nama_responden }}</p>
                     <p class="text-[11px] text-slate-600">{{ $auditKebutuhan->jabatan_responden ?: 'Staf Pelayanan' }}</p>
                 </div>
 

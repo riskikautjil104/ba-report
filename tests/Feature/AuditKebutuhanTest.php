@@ -79,12 +79,14 @@ class AuditKebutuhanTest extends TestCase
             'status' => AuditStatus::SelesaiWawancara->value,
             'nama_vendor' => 'PT. Datascrip',
             'catatan_vendor' => 'Pengadaan printer barcode thermal',
+            'tanda_tangan_responden' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
         ]);
 
         $this->assertDatabaseHas('audit_kebutuhans', [
             'unit_kerja' => 'Poli Penyakit Dalam',
             'nama_responden' => 'Ns. Rahmat',
             'nama_vendor' => 'PT. Datascrip',
+            'tanda_tangan_responden' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
         ]);
 
         $audit = AuditKebutuhan::where('unit_kerja', 'Poli Penyakit Dalam')->firstOrFail();
